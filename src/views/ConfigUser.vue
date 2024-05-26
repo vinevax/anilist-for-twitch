@@ -22,7 +22,7 @@ const onSubmit = async () => {
   if (!userId.value) return;
 
   saveConfig({ AniListUsername: username.value, AniListUserId: userId.value});
-  toggleSuccess();
+  success.value = true;
 }
 
 const toggleSuccess = () => {
