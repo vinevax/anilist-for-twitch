@@ -1,8 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import ExtensionIndex from "@/views/ExtensionIndex.vue";
 
+const getBase = (): string => {
+  const base = window.location.pathname.split('/');
+  base.pop();
+  return base.join('/');
+}
+
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(
+      getBase(),
+  ),
   routes: [
     {
       path: '/panel.html',
