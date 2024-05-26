@@ -1,3 +1,5 @@
+import type {MediaListEntry} from "@/types";
+
 type UserIdResponse = {
     User: {
         id: number;
@@ -34,10 +36,10 @@ const getUserId = async (username: string) => {
     return res.User.id;
 }
 
-const getCurrentWatching = async (userId: Number) => {
+const getCurrentWatching = async (userId: number) => {
     const query = `
         query ($userId: Int) {
-          MediaListCollection(userId: $userId, type: ANIME, status_in: CURRENT) {
+          MediaListCollection(userId: $userId, type: ANIME, status_in: [CURRENT]) {
             lists {
               name
               entries {
@@ -59,7 +61,7 @@ const getCurrentWatching = async (userId: Number) => {
 
     const res = await sendQuery(query, { userId });
 
-    return res.MediaListCollection.lists[0].entries;
+    return res.MediaListCollection.lists[0].entries as MediaListEntry[];
 }
 
 export const useAniList = () => {
