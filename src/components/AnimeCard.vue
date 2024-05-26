@@ -16,7 +16,7 @@ const title = computed(() => props.anime.media.title.english ?? props.anime.medi
 
 <template>
   <div v-if="anime" class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 h-full group">
-    <a :href="anime.media.siteUrl">
+    <a :href="anime.media.siteUrl" target="_blank">
       <div class="relative h-48 transition-all duration-200">
         <img class="rounded-t-lg absolute z-0 w-full h-full rounded-lg" :src="anime.media.coverImage.large" :alt="title" />
         <div class="p-5 absolute inset-0 items-center justify-center group-hover:bg-black/75 rounded-lg hidden group-hover:flex">
