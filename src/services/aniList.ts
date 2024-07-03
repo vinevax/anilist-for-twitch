@@ -1,4 +1,5 @@
-import type {MediaListEntry} from "@/types";
+import {ListType, type MediaListEntry} from "@/types";
+import {list} from "postcss";
 
 type UserIdResponse = {
     User: {
@@ -36,10 +37,12 @@ const getUserId = async (username: string) => {
     return res.User.id;
 }
 
-const getCurrentWatching = async (userId: number) => {
+const getList = async (userId: number, listType: ListType) => {
+    const status = [listType.toString().toUpperCase()];
+
     const query = `
-        query ($userId: Int) {
-          MediaListCollection(userId: $userId, type: ANIME, status_in: [CURRENT]) {
+        query ($userId: Int, $status: [MediaListStatus]) {
+          MediaListCollection(userId: $userId, type: ANIME, status_in: $status) {
             lists {
               name
               entries {
@@ -59,7 +62,7 @@ const getCurrentWatching = async (userId: number) => {
         }
     `;
 
-    const res = await sendQuery(query, { userId });
+    const res = await sendQuery(query, { userId, status });
 
     return res.MediaListCollection.lists[0].entries as MediaListEntry[];
 }
@@ -68,6 +71,6 @@ export const useAniList = () => {
     return {
         sendQuery,
         getUserId,
-        getCurrentWatching,
+        getList,
     }
 }

@@ -1,32 +1,53 @@
 <script setup lang="ts">
 import {useTwitch} from "@/services/twitch";
 import {useAniList} from "@/services/aniList";
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import AnimeCard from "@/components/AnimeCard.vue";
-import type {MediaListEntry} from "@/types";
+import {ListType, type MediaListEntry} from "@/types";
+import NavigationBar from "@/components/NavigationBar.vue";
 
-const { getCurrentWatching } = useAniList();
+const { getList } = useAniList();
+
+const loading = ref(true);
+const list = ref<MediaListEntry[]|null>(null);
+const currentNavigation = ref(ListType.CURRENT);
+
+const setList = async () => {
+  const { config } = useTwitch();
+  loading.value = true;
+  list.value = await getList(config.AniListUserId, currentNavigation.value);
+  loading.value = false;
+}
 
 window.Twitch.ext.configuration.onChanged(async () => {
-  const { config } = useTwitch();
-
-  list.value = await getCurrentWatching(config.AniListUserId);
+  await setList();
 });
 
-const list = ref<MediaListEntry[]|null>(null);
+watch(currentNavigation, async () => {
+  await setList();
+});
 </script>
 
 <template>
-  <div v-if="list" class="bg-indigo-950/50 px-4">
-    <h1 class="text-2xl text-white text-center py-3">Anime Watchlist</h1>
-    <div class="grid grid-cols-2 gap-4">
-      <div v-for="anime in list" v-bind:key="anime.media.id">
-        <anime-card :anime="anime" />
+  <div>
+    <navigation-bar v-model="currentNavigation" />
+
+    <div v-if="loading" class="flex flex-row justify-center items-center mt-8">
+      <div class="flex flex-col">
+        <p class="font-bolds text-2xl text-white">Loading</p>
+        <div class="flex flex-row justify-center items-center">
+          <div class="loader"></div>
+        </div>
       </div>
     </div>
-  </div>
-  <div v-else class="flex flex-row min-h-screen justify-center items-center">
-    <div class="loader"></div>
+
+    <div v-else class="px-1.5">
+      <div class="grid grid-cols-3 gap-4 mt-4">
+        <div v-for="anime in list" v-bind:key="anime.media.id">
+          <anime-card :anime="anime" />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -42,7 +63,7 @@ const list = ref<MediaListEntry[]|null>(null);
   animation: l4 1s steps(4) infinite;
 }
 .loader:before {
-  content:"Loading..."
+  content:"..."
 }
 @keyframes l4 {to{clip-path: inset(0 -1ch 0 0)}}
 </style>
