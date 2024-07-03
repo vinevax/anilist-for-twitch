@@ -20,3 +20,5 @@ export enum ListStatus {
     PLANNING = 'planning',
     COMPLETED = 'completed',
 }
+
+export type Language = "romaji" | "native" | "english";
