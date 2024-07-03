@@ -3,14 +3,14 @@ import {useTwitch} from "@/services/twitch";
 import {useAniList} from "@/services/aniList";
 import {ref, watch} from "vue";
 import AnimeCard from "@/components/AnimeCard.vue";
-import {ListType, type MediaListEntry} from "@/types";
+import {ListStatus, type MediaListEntry} from "@/types";
 import NavigationBar from "@/components/NavigationBar.vue";
 
 const { getList } = useAniList();
 
 const loading = ref(true);
 const list = ref<MediaListEntry[]|null>(null);
-const currentNavigation = ref(ListType.CURRENT);
+const currentNavigation = ref(ListStatus.CURRENT);
 
 const setList = async () => {
   const { config } = useTwitch();

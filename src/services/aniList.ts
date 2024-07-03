@@ -1,5 +1,4 @@
-import {ListType, type MediaListEntry} from "@/types";
-import {list} from "postcss";
+import {ListStatus, type MediaListEntry} from "@/types";
 
 type UserIdResponse = {
     User: {
@@ -37,8 +36,8 @@ const getUserId = async (username: string) => {
     return res.User.id;
 }
 
-const getList = async (userId: number, listType: ListType) => {
-    const status = [listType.toString().toUpperCase()];
+const getList = async (userId: number, listStatus: ListStatus) => {
+    const status = [listStatus.toString().toUpperCase()];
 
     const query = `
         query ($userId: Int, $status: [MediaListStatus]) {
