@@ -1,4 +1,4 @@
-import {ListStatus, type MediaListEntry} from "@/types";
+import {ListStatus, ListType, type MediaListEntry} from "@/types";
 
 type UserIdResponse = {
     User: {
@@ -36,12 +36,12 @@ const getUserId = async (username: string) => {
     return res.User.id;
 }
 
-const getList = async (userId: number, listStatus: ListStatus) => {
+const getList = async (userId: number, listStatus: ListStatus, listType: ListType | undefined) => {
     const status = [listStatus.toString().toUpperCase()];
 
     const query = `
-        query ($userId: Int, $status: [MediaListStatus]) {
-          MediaListCollection(userId: $userId, type: ANIME, status_in: $status) {
+        query ($userId: Int, $status: [MediaListStatus], $listType: MediaType) {
+          MediaListCollection(userId: $userId, type: $listType, status_in: $status) {
             lists {
               name
               entries {
@@ -61,7 +61,7 @@ const getList = async (userId: number, listStatus: ListStatus) => {
         }
     `;
 
-    const res = await sendQuery(query, { userId, status });
+    const res = await sendQuery(query, { userId, status, listType });
 
     return res.MediaListCollection.lists[0].entries as MediaListEntry[];
 }
