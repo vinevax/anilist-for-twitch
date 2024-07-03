@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {useTwitch} from "@/services/twitch";
 import {useAniList} from "@/services/aniList";
-import {computed, ref, watch} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import {ListStatus, ListType, type MediaListEntry} from "@/types";
 import NavigationBar from "@/components/NavigationBar.vue";
 import ListTypeNavigation from "@/components/ListTypeNavigation.vue";
@@ -10,7 +10,6 @@ import MediaCard from "@/components/MediaCard.vue";
 const { getList } = useAniList();
 
 const loading = ref(true);
-const isTwitchReady = ref(false);
 const list = ref<MediaListEntry[]|null>(null);
 const currentNavigation = ref(ListStatus.CURRENT);
 const currentType = ref<ListType>();
@@ -32,12 +31,10 @@ const setList = async () => {
   loading.value = false;
 }
 
-window.Twitch.ext.configuration.onChanged(async () => {
+onMounted(async () => {
   currentType.value = defaultType.value;
-  isTwitchReady.value = true;
-
   await setList();
-});
+})
 
 watch(currentNavigation, async () => {
   await setList();
@@ -50,10 +47,8 @@ watch(currentType, async () => {
 
 <template>
   <div>
-    <div v-if="isTwitchReady">
-      <list-type-navigation v-model="currentType" />
-      <navigation-bar v-model="currentNavigation" />
-    </div>
+    <list-type-navigation v-model="currentType" />
+    <navigation-bar v-model="currentNavigation" />
 
     <div v-if="loading" class="flex flex-row justify-center items-center mt-8">
       <div class="flex flex-col">
