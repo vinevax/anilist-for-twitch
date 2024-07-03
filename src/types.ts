@@ -14,3 +14,9 @@ export type MediaListEntry = {
     }
     progress: number;
 }
+
+export enum ListType {
+    CURRENT = 'current',
+    PLANNING = 'planning',
+    COMPLETED = 'completed',
+}
