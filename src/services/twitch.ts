@@ -10,6 +10,8 @@ type TwitchConfig = {
     AniListUsername: string;
     AniListUserId: number;
     PreferredLanguage: Language;
+    WatchlistEnabled: boolean;
+    ReadingListEnabled: boolean;
 }
 
 const version = "1";

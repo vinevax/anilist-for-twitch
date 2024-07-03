@@ -22,3 +22,8 @@ export enum ListStatus {
 }
 
 export type Language = "romaji" | "native" | "english";
+
+export enum ListType {
+    ANIME = "ANIME",
+    MANGA = "MANGA",
+}
