@@ -1,25 +1,38 @@
 <script setup lang="ts">
 import {useTwitch} from "@/services/twitch";
 import {useAniList} from "@/services/aniList";
-import {ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 import AnimeCard from "@/components/AnimeCard.vue";
-import {ListStatus, type MediaListEntry} from "@/types";
+import {ListStatus, ListType, type MediaListEntry} from "@/types";
 import NavigationBar from "@/components/NavigationBar.vue";
+import ListTypeNavigation from "@/components/ListTypeNavigation.vue";
 
 const { getList } = useAniList();
 
 const loading = ref(true);
 const list = ref<MediaListEntry[]|null>(null);
 const currentNavigation = ref(ListStatus.CURRENT);
+const currentType = ref<ListType|null>();
+
+const defaultType = computed(() => {
+  const { config } = useTwitch();
+
+  if (config.WatchlistEnabled) return ListType.ANIME;
+  if (config.ReadingListEnabled) return ListType.MANGA;
+  return null;
+});
 
 const setList = async () => {
   const { config } = useTwitch();
+
   loading.value = true;
   list.value = await getList(config.AniListUserId, currentNavigation.value);
   loading.value = false;
 }
 
 window.Twitch.ext.configuration.onChanged(async () => {
+  currentType.value = defaultType.value;
+
   await setList();
 });
 
@@ -30,6 +43,7 @@ watch(currentNavigation, async () => {
 
 <template>
   <div>
+    <list-type-navigation v-model="currentType" />
     <navigation-bar v-model="currentNavigation" />
 
     <div v-if="loading" class="flex flex-row justify-center items-center mt-8">

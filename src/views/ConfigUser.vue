@@ -7,8 +7,10 @@ import type {Language} from "@/types";
 const { config, saveConfig } = useTwitch();
 const { getUserId } = useAniList();
 
-const username = ref<string>('');
-const preferredLanguage = ref<Language>("english")
+const username = ref<string>(config.AniListUsername);
+const preferredLanguage = ref<Language>(config.PreferredLanguage)
+const watchlistEnabled = ref<boolean>(config.WatchlistEnabled);
+const readingListEnabled = ref<boolean>(config.ReadingListEnabled);
 
 const userId = ref<number | null>(null);
 const success = ref<boolean>(false);
@@ -25,7 +27,14 @@ const onSubmit = async () => {
 
   if (!userId.value) return;
 
-  saveConfig({ AniListUsername: username.value, AniListUserId: userId.value, PreferredLanguage: preferredLanguage.value});
+  saveConfig({
+    AniListUsername: username.value,
+    AniListUserId: userId.value,
+    PreferredLanguage: preferredLanguage.value,
+    WatchlistEnabled: watchlistEnabled.value,
+    ReadingListEnabled: readingListEnabled.value
+  });
+
   success.value = true;
 }
 
@@ -50,6 +59,17 @@ const toggleSuccess = () => {
           <option value="romaji">Romaji</option>
           <option value="native">Native</option>
         </select>
+      </div>
+
+      <div>
+        <div class="my-3">
+          <input id="watchlistEnabled" type="checkbox" class="rounded" v-model="watchlistEnabled">
+          <label for="watchlistEnabled" class="px-3 text-white">Enable watchlist?</label>
+        </div>
+        <div>
+          <input id="readingListEnabled" type="checkbox" class="rounded" v-model="readingListEnabled">
+          <label for="readingListEnabled" class="px-3 text-white">Enable reading list?</label>
+        </div>
       </div>
 
       <button type="submit" class="bg-indigo-800 hover:bg-indigo-900 text-white font-semibold py-2 px-8 mt-4 rounded">Save</button>
