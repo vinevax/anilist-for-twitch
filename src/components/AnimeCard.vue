@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import type {MediaListEntry} from "@/types";
 import {computed} from "vue";
+import {useTwitch} from "@/services/twitch";
+
+const { config } = useTwitch();
+
 
 const props = withDefaults(
     defineProps<{
@@ -11,7 +15,18 @@ const props = withDefaults(
     }
 )
 
-const title = computed(() => props.anime.media.title.english ?? props.anime.media.title.romaji ?? props.anime.media.title.native);
+const title = computed(() => {
+  switch (config.PreferredLanguage) {
+    case "english":
+      return props.anime.media.title.english ?? props.anime.media.title.romaji ?? props.anime.media.title.native;
+    case "romaji":
+      return props.anime.media.title.romaji ?? props.anime.media.title.english ?? props.anime.media.title.native;
+    case "native":
+      return props.anime.media.title.native ?? props.anime.media.title.romaji ?? props.anime.media.title.english;
+    default:
+      return props.anime.media.title.english ?? props.anime.media.title.romaji ?? props.anime.media.title.native;
+  }
+});
 </script>
 
 <template>

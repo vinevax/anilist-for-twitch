@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { defineProps, defineEmits } from 'vue';
-import {ListType} from "@/types";
+import {ListStatus} from "@/types";
 
 const props = defineProps({
-  modelValue: String as () => ListType,
+  modelValue: String as () => ListStatus,
 });
 
 const emit = defineEmits(['update:modelValue']);
@@ -26,23 +26,23 @@ const classes = (value: string) => {
     <div class="border-b border-black">
       <nav class="-mb-px flex">
         <button
-            @click="updateValue(ListType.CURRENT)"
+            @click="updateValue(ListStatus.CURRENT)"
             class="w-1/3 border-b-2 px-1 py-4 text-center text-sm font-medium"
-            v-bind:class="classes(ListType.CURRENT)"
+            v-bind:class="classes(ListStatus.CURRENT)"
         >
           Current
         </button>
         <button
-            @click="updateValue(ListType.PLANNING)"
+            @click="updateValue(ListStatus.PLANNING)"
             class="w-1/3 border-b-2 px-1 py-4 text-center text-sm font-medium"
-            v-bind:class="classes(ListType.PLANNING)"
+            v-bind:class="classes(ListStatus.PLANNING)"
         >
           Planning
         </button>
         <button
-            @click="updateValue(ListType.COMPLETED)"
+            @click="updateValue(ListStatus.COMPLETED)"
             class="w-1/3 border-b-2 px-1 py-4 text-center text-sm font-medium"
-            v-bind:class="classes(ListType.COMPLETED)"
+            v-bind:class="classes(ListStatus.COMPLETED)"
         >
           Completed
         </button>

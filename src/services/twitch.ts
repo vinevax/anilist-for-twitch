@@ -1,3 +1,5 @@
+import type {Language} from "@/types";
+
 declare global {
     interface Window {
         Twitch: any;
@@ -7,6 +9,7 @@ declare global {
 type TwitchConfig = {
     AniListUsername: string;
     AniListUserId: number;
+    PreferredLanguage: Language;
 }
 
 const version = "1";
