@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import {useTwitch} from "@/services/twitch";
-import {useAniList} from "@/services/aniList";
 import {computed, onMounted, ref, watch} from "vue";
 import {ListStatus, ListType, type MediaListEntry} from "@/types";
 import NavigationBar from "@/components/NavigationBar.vue";
 import ListTypeNavigation from "@/components/ListTypeNavigation.vue";
 import MediaCard from "@/components/MediaCard.vue";
+import {useCachedList} from "@/services/cachedList";
 
-const { getList } = useAniList();
+const { getCachedList } = useCachedList();
 
 const loading = ref(true);
 const list = ref<MediaListEntry[]|null>(null);
@@ -27,7 +27,7 @@ const setList = async () => {
   const { config } = useTwitch();
 
   loading.value = true;
-  list.value = await getList(config.AniListUserId, currentNavigation.value, currentType.value);
+  list.value = await getCachedList(config.AniListUserId, currentNavigation.value, currentType.value);
   loading.value = false;
 }
 
